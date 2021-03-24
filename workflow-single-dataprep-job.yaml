@@ -1,0 +1,28 @@
+- AssignVariables:
+    assign:
+    - Dataprep_Auth_Token: "XXXXXXXXXXXXX"
+    - RecipeID: 9999999
+    - InputFile: "Your_input_file.csv"
+    - OutputFile: "Your_output_file.csv"
+
+- runRecipe:
+    call: http.post
+    args:
+      url: https://api.clouddataprep.com/v4/jobGroups
+      body:
+        wrangledDataset:
+          id: ${RecipeID}
+        runParameters:
+          overrides:
+            data:
+              - key: "InputFile"
+                value: ${InputFile}
+              - key: "OutputFile"
+                value: ${OutputFile}
+      headers:
+        Content-Type: "application/json"
+        Authorization: ${"Bearer "+Dataprep_Auth_Token}
+    result: jobResponse
+
+- returnResult:
+    return: ${jobResponse.body}
